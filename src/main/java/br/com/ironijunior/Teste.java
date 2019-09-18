@@ -26,7 +26,7 @@ public class Teste {
     private static void emitNumbers(FluxSink<Integer> emitter) {
         int count = 0;
 
-        while (count < 20) {
+        while (count < 15) {
             count++;
 
             System.out.println("Emitting..." + count);
