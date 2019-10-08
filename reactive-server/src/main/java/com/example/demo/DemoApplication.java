@@ -16,5 +16,25 @@ public class DemoApplication {
     }
 
     private static void emitNumber(FluxSink<Integer> integerFluxSink) {
+        var count = 0;
+
+        while (count < 10) {
+            count++;
+            System.out.println("Emitting... " + count);
+            integerFluxSink.next(count);
+            sleep(500);
+        }
+
+        integerFluxSink.complete();
+    }
+
+    public static boolean sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
