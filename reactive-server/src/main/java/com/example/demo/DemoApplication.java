@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
+import reactor.core.scheduler.Schedulers;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -21,6 +22,7 @@ public class DemoApplication {
                     );
                     return rn;
                 })
+                .publishOn(Schedulers.elastic(), true, 1)
                 .subscribe(
                         DemoApplication::consume,
                         err -> System.out.println("Error " + err),
@@ -30,6 +32,7 @@ public class DemoApplication {
 
     private static void consume(ReactiveNumber reactiveNumber) {
         System.out.println(reactiveNumber);
+        sleep(1000);
     }
 
     private static void emitNumber(FluxSink<Integer> integerFluxSink) {
