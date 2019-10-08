@@ -14,14 +14,21 @@ public class DemoApplication {
 //        SpringApplication.run(DemoApplication.class, args);
 
         Flux.<Integer>create(DemoApplication::emitNumber, FluxSink.OverflowStrategy.BUFFER)
-            .map(i -> {
-                ReactiveNumber rn = new ReactiveNumber(i);
-                rn.setEvenOdd(
-                        i % 2 == 0 ? EvenOdd.EVEN : EvenOdd.ODD
-                );
-                return rn;
-            });
+                .map(i -> {
+                    ReactiveNumber rn = new ReactiveNumber(i);
+                    rn.setEvenOdd(
+                            i % 2 == 0 ? EvenOdd.EVEN : EvenOdd.ODD
+                    );
+                    return rn;
+                })
+                .subscribe(
+                        DemoApplication::consume,
+                        err -> System.out.println("Error " + err),
+                        () -> System.out.println("Done"));
 
+    }
+
+    private static void consume(ReactiveNumber reactiveNumber) {
     }
 
     private static void emitNumber(FluxSink<Integer> integerFluxSink) {
