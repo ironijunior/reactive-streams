@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.example.demo.evenodd.EvenOdd;
+import com.example.demo.evenodd.ReactiveNumber;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import reactor.core.publisher.Flux;
@@ -11,7 +13,14 @@ public class DemoApplication {
     public static void main(String[] args) {
 //        SpringApplication.run(DemoApplication.class, args);
 
-        Flux.<Integer>create(DemoApplication::emitNumber, FluxSink.OverflowStrategy.BUFFER);
+        Flux.<Integer>create(DemoApplication::emitNumber, FluxSink.OverflowStrategy.BUFFER)
+            .map(i -> {
+                ReactiveNumber rn = new ReactiveNumber(i);
+                rn.setEvenOdd(
+                        i % 2 == 0 ? EvenOdd.EVEN : EvenOdd.ODD
+                );
+                return rn;
+            });
 
     }
 
