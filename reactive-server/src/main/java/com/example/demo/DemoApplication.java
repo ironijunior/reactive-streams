@@ -28,6 +28,7 @@ public class DemoApplication {
                         err -> System.out.println("Error " + err),
                         () -> System.out.println("Done"));
 
+        sleep(10000);
     }
 
     private static void consume(ReactiveNumber reactiveNumber) {
