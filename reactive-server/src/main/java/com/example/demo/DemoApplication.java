@@ -29,6 +29,7 @@ public class DemoApplication {
     }
 
     private static void consume(ReactiveNumber reactiveNumber) {
+        System.out.println(reactiveNumber);
     }
 
     private static void emitNumber(FluxSink<Integer> integerFluxSink) {
