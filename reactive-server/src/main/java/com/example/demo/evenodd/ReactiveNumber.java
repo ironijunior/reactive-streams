@@ -2,18 +2,18 @@ package com.example.demo.evenodd;
 
 public class ReactiveNumber {
 
-    private int number;
+    private long number;
     private EvenOdd evenOdd;
 
-    public ReactiveNumber(int number) {
+    public ReactiveNumber(long number) {
         this.number = number;
     }
 
-    public int getNumber() {
+    public long getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(long number) {
         this.number = number;
     }
 
