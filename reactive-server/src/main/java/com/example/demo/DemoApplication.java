@@ -14,7 +14,7 @@ public class DemoApplication {
     public static void main(String[] args) {
 //        SpringApplication.run(DemoApplication.class, args);
 
-        Flux.<Integer>create(DemoApplication::emitNumber, FluxSink.OverflowStrategy.BUFFER)
+        Flux.<Integer>create(DemoApplication::emitNumber, FluxSink.OverflowStrategy.DROP)
                 .map(i -> {
                     ReactiveNumber rn = new ReactiveNumber(i);
                     rn.setEvenOdd(
