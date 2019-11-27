@@ -2,7 +2,6 @@ package com.example.demo.paradigm;
 
 
 import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -10,11 +9,11 @@ import java.util.List;
 
 public class Paradigm {
 
-    private static final int OLD_AGE = 40;
+    private static final int FORTY = 40;
     private static List<Person> people = new ArrayList<>();
     private static Flux<Person> reactivePeople;
     static {
-        initializeEmployees();
+        initializePeople();
     }
 
     public static void main(String[] args) {
@@ -22,7 +21,7 @@ public class Paradigm {
          * Imperative: how
           */
         for(Person p : people) {
-            if(p.getAge() < OLD_AGE) {
+            if(p.getAge() < FORTY) {
                 System.out.println(p);
             }
         }
@@ -31,20 +30,20 @@ public class Paradigm {
          * Functional: what
          */
         people.stream()
-                .filter(p -> p.getAge() < OLD_AGE)
+                .filter(p -> p.getAge() < FORTY)
                 .forEach(System.out::println);
 
         /**
          * Reactive: when + what
          */
         reactivePeople
-                .filter(p -> p.getAge() < OLD_AGE)
+                .filter(p -> p.getAge() < FORTY)
                 .subscribe(System.out::println);
 
         sleep(10000);
     }
 
-    private static void initializeEmployees() {
+    private static void initializePeople() {
         people.add(new Person("Ironi", 25));
         people.add(new Person("Roggia", 26));
         people.add(new Person("Pedro", 45));
