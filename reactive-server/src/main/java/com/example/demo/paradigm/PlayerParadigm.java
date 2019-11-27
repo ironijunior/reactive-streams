@@ -1,7 +1,6 @@
 package com.example.demo.paradigm;
 
 import reactor.core.publisher.Flux;
-import reactor.core.scheduler.Schedulers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,12 +8,72 @@ import java.util.List;
 
 public class PlayerParadigm {
 
-    public static final int RETIREMENT_AGE = 35;
+    private static final int RETIREMENT_AGE = 35;
     private static List<Player> players = new ArrayList<>();
     private static Flux<Player> playersReactive;
 
     static {
         initialize();
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Imperative: ");
+        playersToRetireImperative();
+        System.out.println("-------------");
+        System.out.println("Functional: ");
+        playersToRetireFunctional();
+        System.out.println("-------------");
+        System.out.println("Reactive: ");
+        playersToRetireReactive();
+    }
+
+    /**
+     * Imperative = HOW
+     */
+    private static void playersToRetireImperative() {
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+
+            if (player.getAge() > RETIREMENT_AGE) {
+                if (CountryCode.BR.equals(player.getCountry())) {
+                    PlayerToRetire toRetire = new PlayerToRetire(player);
+                    toRetire.setRetired(true);
+
+                    System.out.println(toRetire);
+                }
+            }
+        }
+    }
+
+    /**
+     * Imperative = WHAT
+     */
+    private static void playersToRetireFunctional() {
+        players.stream()
+            .filter(player -> player.getAge() > RETIREMENT_AGE)
+            .filter(player -> CountryCode.BR.equals(player.getCountry()))
+            .map(player -> {
+                PlayerToRetire toRetire = new PlayerToRetire(player);
+                toRetire.setRetired(true);
+                return toRetire;
+            })
+            .forEach(System.out::println);
+    }
+
+    /**
+     * Imperative = WHEN + WHAT
+     */
+    private static void playersToRetireReactive() {
+        Flux<PlayerToRetire> toRetirePublisher = playersReactive
+            .filter(player -> player.getAge() > RETIREMENT_AGE)
+            .filter(player -> CountryCode.BR.equals(player.getCountry()))
+            .map(player -> {
+                PlayerToRetire toRetire = new PlayerToRetire(player);
+                toRetire.setRetired(true);
+                return toRetire;
+            });
+
+        toRetirePublisher.subscribe(System.out::println);
     }
 
     private static void initialize() {
@@ -49,63 +108,4 @@ public class PlayerParadigm {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println("Imperative: ");
-        playersToRetireImperative();
-        System.out.println("-------------");
-        System.out.println("Functional: ");
-        playersToRetireFunctional();
-        System.out.println("-------------");
-        System.out.println("Reactive: ");
-        playersToRetireReactive();
-    }
-
-    /**
-     * Imperative = HOW
-     */
-    private static void playersToRetireImperative() {
-        for (int i = 0; i < players.size(); i++) {
-            Player player = players.get(i);
-
-            if (player.getAge() > RETIREMENT_AGE) {
-                if (CountryCode.BR.equals(player.getCountry())) {
-                    PlayerToRetire toRetire = new PlayerToRetire(player);
-                    toRetire.setRetired(false);
-
-                    System.out.println(toRetire);
-                }
-            }
-        }
-    }
-
-    /**
-     * Imperative = WHAT
-     */
-    private static void playersToRetireFunctional() {
-        players.stream()
-            .filter(player -> player.getAge() > RETIREMENT_AGE)
-            .filter(player -> CountryCode.BR.equals(player.getCountry()))
-            .map(player -> {
-                PlayerToRetire toRetire = new PlayerToRetire(player);
-                toRetire.setRetired(false);
-                return toRetire;
-            })
-            .forEach(System.out::println);
-    }
-
-    /**
-     * Imperative = WHEN + WHAT
-     */
-    private static void playersToRetireReactive() {
-        Flux<PlayerToRetire> toRetirePublisher = playersReactive
-            .filter(player -> player.getAge() > RETIREMENT_AGE)
-            .filter(player -> CountryCode.BR.equals(player.getCountry()))
-            .map(player -> {
-                PlayerToRetire toRetire = new PlayerToRetire(player);
-                toRetire.setRetired(false);
-                return toRetire;
-            });
-
-        toRetirePublisher.subscribe(System.out::println);
-    }
 }
